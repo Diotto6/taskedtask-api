@@ -9,10 +9,10 @@ module.exports = {
       rejectUnauthorized: false,
     },
   },
-  migrations: ["src/database/migrations/**/*"],
-  entities: ["src/database/entities/**/*"],
+  migrations: ["dist/database/migrations/**/*"],
+  entities: ["dist/database/entities/**/*"],
   cli: {
-    entitiesDir: "src/database/entities",
-    migrationsDir: "src/database/migrations",
+    entitiesDir: "dist/database/entities",
+    migrationsDir: "dist/database/migrations",
   },
 };

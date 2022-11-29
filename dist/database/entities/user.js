@@ -17,21 +17,22 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const typeorm_1 = require("typeorm");
 const errands_1 = require("./errands");
 let UserEntity = class UserEntity extends typeorm_1.BaseEntity {
-    constructor(firstName, lastName, userName, email, password) {
+    constructor(firstName, lastName, email, password, passwordConfirm) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
         this.email = email;
         this.password = password;
+        this.passwordConfirm = passwordConfirm;
     }
     hashPassword() {
         this.password = bcryptjs_1.default.hashSync(this.password, 12);
+        this.passwordConfirm = bcryptjs_1.default.hashSync(this.passwordConfirm, 12);
     }
 };
 __decorate([
     (0, typeorm_1.PrimaryColumn)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], UserEntity.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -44,15 +45,15 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], UserEntity.prototype, "userName", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
 ], UserEntity.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], UserEntity.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], UserEntity.prototype, "passwordConfirm", void 0);
 __decorate([
     (0, typeorm_1.BeforeInsert)(),
     __metadata("design:type", Function),
@@ -64,8 +65,8 @@ __decorate([
     __metadata("design:type", Array)
 ], UserEntity.prototype, "errands", void 0);
 UserEntity = __decorate([
-    (0, typeorm_1.Entity)({ name: 'user' }),
-    __metadata("design:paramtypes", [Object, Object, Object, String, String])
+    (0, typeorm_1.Entity)({ name: "user" }),
+    __metadata("design:paramtypes", [String, String, String, String, String])
 ], UserEntity);
 exports.UserEntity = UserEntity;
 //# sourceMappingURL=user.js.map

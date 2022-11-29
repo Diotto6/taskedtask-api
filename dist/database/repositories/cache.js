@@ -13,7 +13,7 @@ class CacheRepository {
         await this.redis.set(key, JSON.stringify(value));
     }
     async setEx(key, value, ttl) {
-        await this.redis.set(key, JSON.stringify(value), 'EX', 15);
+        await this.redis.set(key, JSON.stringify(value), "EX", 15);
     }
     async get(key) {
         const result = await this.redis.get(key);

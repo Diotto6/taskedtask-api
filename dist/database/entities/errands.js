@@ -21,23 +21,23 @@ let ErrandEntity = class ErrandEntity extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryColumn)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], ErrandEntity.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], ErrandEntity.prototype, "message", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'userId' }),
+    (0, typeorm_1.Column)({ name: "userId" }),
     __metadata("design:type", String)
 ], ErrandEntity.prototype, "userId", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_1.UserEntity, (user) => user.errands),
-    (0, typeorm_1.JoinColumn)({ name: 'userId', referencedColumnName: 'id' }),
+    (0, typeorm_1.JoinColumn)({ name: "userId", referencedColumnName: "id" }),
     __metadata("design:type", user_1.UserEntity)
 ], ErrandEntity.prototype, "user", void 0);
 ErrandEntity = __decorate([
-    (0, typeorm_1.Entity)({ name: 'errands' }),
+    (0, typeorm_1.Entity)({ name: "errands" }),
     __metadata("design:paramtypes", [String, String])
 ], ErrandEntity);
 exports.ErrandEntity = ErrandEntity;

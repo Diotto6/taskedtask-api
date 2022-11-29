@@ -10,10 +10,10 @@ function authMiddleware(request, response, next) {
     const { authorization } = request.headers;
     if (!authorization) {
         return response
-            .sendStatus(constants_1.HttpUnauthorized)
-            .json({ message: 'Not authorized(a)' });
+            .json({ message: "Não autorizado(a)" })
+            .sendStatus(constants_1.HttpUnauthorized);
     }
-    const token = authorization.replace('Bearer', '').trim();
+    const token = authorization.replace("Bearer", "").trim();
     try {
         const data = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         const { id } = data;

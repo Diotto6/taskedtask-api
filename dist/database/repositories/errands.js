@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ErrandRepository = void 0;
-const errands_1 = require("../entities/errands");
+const errands_1 = require("../../database/entities/errands");
 class ErrandRepository {
-    async find(id) {
-        const errands = await errands_1.ErrandEntity.find({ where: { userId: id } });
+    async find(userId) {
+        const errands = await errands_1.ErrandEntity.find({ where: { userId } });
         return errands;
     }
-    async findOne(id) {
-        const errands = await errands_1.ErrandEntity.findOne(id);
+    async findOne(userId) {
+        const errands = await errands_1.ErrandEntity.findOne(userId);
         return errands;
     }
     async create(errandDTO) {

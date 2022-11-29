@@ -6,46 +6,46 @@ class CreateTableUser1656693649816 {
     async up(queryRunner) {
         await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
         await queryRunner.createTable(new typeorm_1.Table({
-            name: 'user',
+            name: "user",
             columns: [
                 {
-                    name: 'id',
-                    type: 'uuid',
+                    name: "id",
+                    type: "uuid",
                     isPrimary: true,
                     isNullable: false,
-                    generationStrategy: 'uuid',
-                    default: 'uuid_generate_v4()',
+                    generationStrategy: "uuid",
+                    default: "uuid_generate_v4()",
                 },
                 {
-                    name: 'firstName',
-                    type: 'varchar',
+                    name: "firstName",
+                    type: "varchar",
                     isNullable: true,
                 },
                 {
-                    name: 'lastName',
-                    type: 'varchar',
+                    name: "lastName",
+                    type: "varchar",
                     isNullable: true,
                 },
                 {
-                    name: 'userName',
-                    type: 'varchar',
-                    isNullable: true,
-                },
-                {
-                    name: 'email',
-                    type: 'varchar',
+                    name: "email",
+                    type: "varchar",
                     isNullable: false,
                 },
                 {
-                    name: 'password',
-                    type: 'varchar',
+                    name: "password",
+                    type: "varchar",
+                    isNullable: false,
+                },
+                {
+                    name: "passwordConfirm",
+                    type: "varchar",
                     isNullable: false,
                 },
             ],
         }));
     }
     async down(queryRunner) {
-        await queryRunner.dropTable('user', true, true, true);
+        await queryRunner.dropTable("user", true, true, true);
         await queryRunner.query('DROP EXTENSION "uuid-ossp"');
     }
 }
