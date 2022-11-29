@@ -1,8 +1,5 @@
-import { UserService } from "./../services/user";
-import e, { Response, Request } from "express";
+import { Response, Request } from "express";
 import { HttpError } from "../errors";
-import { ErrandService } from "../services";
-
 import {
   createMessage,
   defaultErrorMessage,
@@ -10,24 +7,32 @@ import {
   HttpInternalErrorCode,
   httpSucessCode,
 } from "../constants";
+import { ErrandEntity, UserEntity } from "../database/entities";
+import { ErrandRepository } from "../database/repositories";
+import { CacheRepository } from "../database/repositories/cache";
 
 export default class ErrandController {
   async index(request: Request, response: Response) {
     const { userId } = request.params;
-    const errandService = new ErrandService();
-
+    const cacheRepository = new CacheRepository();
+    const service = await UserEntity.find({ where: { id: userId } });
     try {
-      const errand = await errandService.find(userId);
-      const errandAuth = errand?.filter((errand) => errand.userId === userId);
-      const errands = errandAuth.map((errand) => {
+      const errands = await ErrandEntity.find({ where: { userId: userId } });
+      const errand = errands.map((errand) => {
         return {
           id: errand.id,
           message: errand.message,
           userId: errand.userId,
         };
       });
-
-      if (errands) return response.json(errands).status(201);
+      await cacheRepository.get("msg");
+      if (errand)
+        return response
+          .json({
+            errand,
+            service,
+          })
+          .status(201);
     } catch (error) {
       throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
     }
@@ -36,8 +41,9 @@ export default class ErrandController {
   async store(request: Request, response: Response) {
     const { userId } = request.params;
     const { message } = request.body;
-    const service = new ErrandService();
+    const service = new ErrandRepository();
 
+    const cacheRepository = new CacheRepository();
     const user = await service.find(userId);
     const userAuth = user?.filter((user) => user.userId === userId);
     if (!user) {
@@ -49,8 +55,12 @@ export default class ErrandController {
           message,
           userId,
         });
+        await cacheRepository.set("msg", messages);
         return response
-          .json(createMessage("Recado criado com sucesso!"))
+          .json({
+            ok: true,
+            message: createMessage("Recado criado"),
+          })
           .status(httpCreatedCode);
       }
     } catch (error) {
@@ -61,33 +71,40 @@ export default class ErrandController {
   async update(request: Request, response: Response) {
     const { id, userId } = request.params;
     const { message } = request.body;
-    const service = new ErrandService();
-
+    const service = new ErrandRepository();
+    const cacheRepository = new CacheRepository();
     try {
       await service.update({
         id,
         message,
         userId,
       });
-
+      await cacheRepository.delete("msg");
       return response
-        .json(createMessage(`"${message}" editada`))
+        .json({
+          ok: true,
+          message: createMessage("Recado alterado"),
+        })
         .status(httpCreatedCode);
     } catch (error) {
+      console.error(error);
       throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);
     }
   }
 
   async delete(request: Request, response: Response) {
     const { id } = request.params;
-
-    const service = new ErrandService();
-
+    const cacheRepository = new CacheRepository();
+    const service = new ErrandRepository();
+    await cacheRepository.delete("msg");
     try {
       await service.delete(id);
 
       return response
-        .json(createMessage("Recado deletado"))
+        .json({
+          ok: true,
+          message: createMessage("Recado deletado"),
+        })
         .status(httpSucessCode);
     } catch (error) {
       throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);

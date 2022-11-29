@@ -15,10 +15,10 @@ export class UserEntity extends BaseEntity {
   id?: string;
 
   @Column()
-  firstName?: string;
+  firstName: string;
 
   @Column()
-  lastName?: string;
+  lastName: string;
 
   @Column()
   email: string;
@@ -46,8 +46,8 @@ export class UserEntity extends BaseEntity {
     passwordConfirm: string
   ) {
     super();
-    this.firstName = firstName;
-    this.lastName = lastName;
+    this.firstName = firstName!;
+    this.lastName = lastName!;
     this.email = email!;
     this.password = password!;
     this.passwordConfirm = passwordConfirm;

@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import { UserService } from "../services";
 import { HttpError } from "../errors";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 
@@ -10,6 +8,8 @@ import {
   httpCreatedCode,
   HttpInternalErrorCode,
 } from "../constants";
+import { UserEntity } from "../database/entities";
+import { UserRepository } from "../database/repositories";
 
 export default class UserController {
   async index(request: Request, response: Response) {
@@ -28,7 +28,7 @@ export default class UserController {
   async store(request: Request, response: Response) {
     const { firstName, lastName, email, password, passwordConfirm } =
       request.body;
-    const service = new UserService();
+    const service = new UserRepository();
 
     try {
       await service.create({
@@ -53,8 +53,9 @@ export default class UserController {
 
   async authenticate(request: Request, response: Response) {
     const { email } = request.body;
-    const service = new UserService();
-    const user = await service.findOne({ where: { email } });
+    const service = await UserEntity.find({ where: { email: email } });
+    const user = service.find((user) => user.email === email);
+    console.log(user, service);
 
     try {
       const token = jwt.sign(
@@ -62,13 +63,13 @@ export default class UserController {
         process.env.JWT_SECRET as string,
         { expiresIn: process.env.JWT_EXPIRES }
       );
-      const name = user!.firstName + " " + user!.lastName;
+
       return response.json({
         ok: true,
         email,
         message: "Logado com sucesso!",
         token,
-        name,
+        user,
       });
     } catch (error) {
       throw new HttpError(defaultErrorMessage, HttpInternalErrorCode);

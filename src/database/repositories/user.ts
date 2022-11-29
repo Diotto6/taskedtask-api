@@ -2,20 +2,20 @@ import { UserEntity } from "../entities";
 import { UserDTO } from "../../dto";
 
 export class UserRepository {
-  async find() {
-    const user = await UserEntity.find();
+  async find(email: string) {
+    const user = await UserEntity.find({ where: { email: email } });
     return user;
   }
 
-  async findOne(id: string) {
-    const user = await UserEntity.findOne(id);
+  async findOne(email: string) {
+    const user = await UserEntity.findOne(email);
     return user;
   }
 
   async create(userDTO: UserDTO) {
     const user = await new UserEntity(
-      userDTO.firstName!,
-      userDTO.lastName!,
+      userDTO.firstName,
+      userDTO.lastName,
       userDTO.email,
       userDTO.password,
       userDTO.passwordConfirm!

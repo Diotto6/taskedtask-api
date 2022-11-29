@@ -1,5 +1,5 @@
 import { ErrandDTO } from "../../dto";
-import { ErrandEntity } from "../entities/errands";
+import { ErrandEntity } from "../../database/entities/errands";
 
 export class ErrandRepository {
   async find(userId: string) {
@@ -8,8 +8,8 @@ export class ErrandRepository {
     return errands;
   }
 
-  async findOne(id: string) {
-    const errands = await ErrandEntity.findOne(id);
+  async findOne(userId: string) {
+    const errands = await ErrandEntity.findOne(userId);
 
     return errands;
   }

@@ -1,13 +1,9 @@
-import { Request, Response } from "express";
+import { request, Request, response, Response } from "express";
 import { Router } from "express";
 import UserController from "../controllers/user";
 import MensagensController from "../controllers/errands";
-import {
-  authMiddleware,
-  checkRegistration,
-  verifyCreateErrand,
-} from "../middlewares";
-import loginMiddleware from "../middlewares/login";
+import { authMiddleware, checkRegistration } from "../middlewares";
+import { loginMiddleware } from "../middlewares/login";
 
 export default class NewRoutes {
   init() {
@@ -24,12 +20,8 @@ export default class NewRoutes {
     router.get("/user", authMiddleware, userController.index);
 
     router.get("/messages/:userId", errandsController.index);
-    router.post(
-      "/messages/:userId",
-      [verifyCreateErrand],
-      errandsController.store
-    );
-    router.put("/messages/:id", [verifyCreateErrand], errandsController.update);
+    router.post("/messages/:userId", errandsController.store);
+    router.put("/messages/:userId/:id", errandsController.update);
     router.delete("/messages/:id", errandsController.delete);
 
     return router;

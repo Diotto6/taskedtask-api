@@ -1,19 +1,20 @@
-import { UserService } from "../services";
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import "dotenv/config";
 
 import { HttpBadRequestCode } from "../constants";
 import { NextFunction } from "express";
+import { UserRepository } from "../database/repositories";
 
-export default async function loginMiddleware(
+export async function loginMiddleware(
   request: Request,
   response: Response,
   next: NextFunction
 ) {
   const { email, password } = request.body;
-  const service = new UserService();
-  const user = await service.findOne({ where: { email } });
+  const service = new UserRepository();
+  const users = await service.find(email);
+  const user = users.find((user) => user.email === email);
 
   if (!email || !password) {
     return response
